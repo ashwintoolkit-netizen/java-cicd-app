@@ -5,13 +5,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                dir('java-cicd-app') {
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Copy to Ansible Server') {
             steps {
-                sh 'scp target/app.jar ashu@192.168.47.132:/home/ashu/app.jar'
+                sh 'scp java-cicd-app/target/app.jar ashu@192.168.47.132:/home/ashu/app.jar'
             }
         }
 
