@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone') {
+            steps {
+                git 'https://github.com/ashwintoolkit-netizen/java-cicd-app'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Copy to Ansible Server') {
+            steps {
+                sh 'scp target/app.jar ashu@192.168.47.132:/home/ashu/app.jar'
+            }
+        }
+
+        stage('Deploy via Ansible') {
+            steps {
+                sh 'ssh ashu@192.168.47.132 "ansible-playbook -i /home/ashu/hosts /home/ashu/deploy.yml"'
+            }
+        }
+    }
+}
+
+
+
